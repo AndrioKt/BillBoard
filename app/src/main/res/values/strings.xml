@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">BillBoard</string>
+
+    <!-- Driver menu -->
+    <string name="ad_cat1">Объявление</string>
+    <string name="ad_my_ads">Мои объявления</string>
+    <string name="ad_car">Автомобили</string>
+    <string name="ad_pc">Компьютеры</string>
+    <string name="ad_smartphones">Смартфоны</string>
+    <string name="ad_home_appliances">Бытовая техника</string>
+    <string name="not_reg">Войдите или зарегестрируйтесь!</string>
+
+    <string name="ad_cat2">Аккаунт</string>
+    <string name="ad_sign_up">Регистрация</string>
+    <string name="ad_sign_in">Вход</string>
+    <string name="ad_sign_out">Выход</string>
+    <string name="open_menu">Open</string>
+    <string name="close_menu">Close</string>
+    <!-- Sign dialog -->
+    <string name="Email_hint">Email:</string>
+    <string name="password_hint">Password:</string>
+    <string name="forget_password_button">Забыли пароль?</string>
+    <string name="sign_in_action">Войти</string>
+    <string name="sign_up_action">Зарегистрироваться</string>
+    <string name="sign_up_error">Не удалось зарегистрироваться</string>
+    <string name="sign_in_error">Не удалось войти</string>
+    <string name="send_verif_email_error">Не удалось отправить email для подтверждения!</string>
+    <string name="send_verif_email">На вашу почту была отправлена ссылка для подтверждения вашего аккаунта, пожалуйста подтвердите ваш аккаунт.</string>
+    <string name="send_reset_pass">На вашу почту была отправлена ссылка для восстановления пароля.</string>
+    <string name="send_reset_pass_error">Ошибка восстановления пароля.</string>
+    <string name="reset_pass_hint">Для восстановления пароля укажите ваш Email адрес</string>
+    <string name="no_result">Нет результата</string>
+
+    <!-- Account strings/errors -->
+    <string name="link_done">Успешное объединения Email с Google Account</string>
+    <string name="enter_to_google">У вас уже есть аккаунт с этим Email адресом</string>
+    <string name="error_empty">Заполните пустые поля</string>
+
+    <!-- Edit Activity -->
+    <string name="select_country">*Выберете страну</string>
+    <string name="select_city">*Выберете город</string>
+    <string name="country_not_selected">Не выбрана страна</string>
+
+</resources>
