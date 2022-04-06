@@ -12,7 +12,6 @@ import com.andrio_kt_dev.billboard.databinding.ActivityEditAdsBinding
 import com.andrio_kt_dev.billboard.dialoghelper.DialogSpinnerHelper
 import com.andrio_kt_dev.billboard.frag.FragmentCloseInterface
 import com.andrio_kt_dev.billboard.frag.ImageListFrag
-import com.andrio_kt_dev.billboard.frag.SelectImageItem
 import com.andrio_kt_dev.billboard.utils.CityHelper
 import com.andrio_kt_dev.billboard.utils.ImagePick
 import com.fxn.pix.Pix
@@ -20,6 +19,7 @@ import com.fxn.utility.PermUtil
 
 
 class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
+    private var chooseImagerFrag : ImageListFrag? = null
 
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = DialogSpinnerHelper()
@@ -59,7 +59,11 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
 
 
     fun onClickSelectImg(view: View){
-       ImagePick.getImages(this,3)
+        if(imageAdapter.mainArray.size == 0){
+            ImagePick.getImages(this,3)
+        } else {
+            openChooseImageFrag(imageAdapter.mainArray)
+        }
     }
 
 
@@ -90,13 +94,13 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == ImagePick.REQUEST_CODE_GET_IMAGES) {
-            if(data != null){
+            if (data != null) {
                 val returnValues = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                if(returnValues?.size!! > 1){
-                    binding.scroolViewMain.visibility = View.GONE
-                    val fm = supportFragmentManager.beginTransaction()
-                    fm.replace(R.id.place_holder, ImageListFrag(this, returnValues))
-                        .commit()
+                if (returnValues?.size!! > 1 && chooseImagerFrag == null) {
+                    openChooseImageFrag(returnValues)
+                } else if (chooseImagerFrag != null) {
+                    chooseImagerFrag?.updateAdapter(returnValues)
+
                 }
             }
         }
@@ -104,11 +108,17 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
 
 
 
-    override fun onFragClose(list: ArrayList<SelectImageItem>) {
+    override fun onFragClose(list: ArrayList<String>) {
         binding.scroolViewMain.visibility = View.VISIBLE
         imageAdapter.update(list)
+        chooseImagerFrag = null
     }
 
-
-
+    private fun openChooseImageFrag(newList:ArrayList<String>){
+        chooseImagerFrag = ImageListFrag(this, newList)
+        binding.scroolViewMain.visibility = View.GONE
+        val fm = supportFragmentManager.beginTransaction()
+        fm.replace(R.id.place_holder, chooseImagerFrag!!)
+            .commit()
+    }
 }
