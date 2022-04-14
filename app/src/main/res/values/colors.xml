@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="Menu_color">#0C2973</color>
     <color name="alert_colot">#F84235</color>
+    <color name="grey_light">#ECE1E1</color>
+    <color name="BlueWhite_light">#BECCFB</color>
 </resources>

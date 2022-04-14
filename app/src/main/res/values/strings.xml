@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">BillBoard</string>
+    <string name="ad_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="inter_id">ca-app-pub-3940256099942544/1033173712</string>
 
     <!-- Driver menu -->
     <string name="ad_cat1">Объявление</string>
@@ -30,6 +32,7 @@
     <string name="send_reset_pass_error">Ошибка восстановления пароля.</string>
     <string name="reset_pass_hint">Для восстановления пароля укажите ваш Email адрес</string>
     <string name="no_result">Нет результата</string>
+    <string name="load">Loading...</string>
 
     <!-- Account strings/errors -->
     <string name="link_done">Успешное объединения Email с Google Account</string>

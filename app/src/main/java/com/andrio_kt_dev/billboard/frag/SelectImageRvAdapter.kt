@@ -1,21 +1,23 @@
 package com.andrio_kt_dev.billboard.frag
 
 import android.content.Context
-import android.net.Uri
+import android.graphics.Bitmap
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.andrio_kt_dev.billboard.R
+import com.andrio_kt_dev.billboard.activ.EditAdsActivity
+import com.andrio_kt_dev.billboard.databinding.SelectImageFragItemBinding
+import com.andrio_kt_dev.billboard.utils.AdapterCallback
+import com.andrio_kt_dev.billboard.utils.ImageManager
+import com.andrio_kt_dev.billboard.utils.ImagePick
 import com.andrio_kt_dev.billboard.utils.ItemTouchCallback
 
-class SelectImageRvAdapter: RecyclerView.Adapter<SelectImageRvAdapter.ImageHolder>(), ItemTouchCallback.ItemTouchAdapter {
-    val mainArray = ArrayList<String>()
+class SelectImageRvAdapter(val adapterCallback: AdapterCallback): RecyclerView.Adapter<SelectImageRvAdapter.ImageHolder>(), ItemTouchCallback.ItemTouchAdapter {
+    val mainArray = ArrayList<Bitmap>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.select_image_frag_item,parent,false)
-        return ImageHolder(view,parent.context)
+        val view = SelectImageFragItemBinding.inflate( LayoutInflater.from(parent.context),parent,false)
+        return ImageHolder(view,parent.context,this)
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
@@ -37,18 +39,28 @@ class SelectImageRvAdapter: RecyclerView.Adapter<SelectImageRvAdapter.ImageHolde
         notifyDataSetChanged()
     }
 
-    class ImageHolder(itemView: View,val context: Context) :RecyclerView.ViewHolder(itemView){
-        private lateinit var tvTitle: TextView
-        lateinit var image: ImageView
-                fun setData(item: String){
-            tvTitle = itemView.findViewById(R.id.tvTitle)
-            image = itemView.findViewById(R.id.imageContent)
-            tvTitle.text = context.resources.getStringArray(R.array.title_array)[adapterPosition]
-            image.setImageURI(Uri.parse(item))
+    class ImageHolder(private val binding:SelectImageFragItemBinding,val context: Context,val adapter: SelectImageRvAdapter) :RecyclerView.ViewHolder(binding.root){
+
+        fun setData(bitmap: Bitmap){
+
+            binding.imEditImage.setOnClickListener {
+                ImagePick.getImages(context as EditAdsActivity, 1, ImagePick.REQUEST_CODE_GET_SINGLE_IMAGE)
+                context.editImagePos=adapterPosition
+            }
+            binding.imDelete.setOnClickListener {
+                adapter.mainArray.removeAt(adapterPosition)
+                adapter.notifyItemRemoved(adapterPosition)
+                for (n in 0 until adapter.mainArray.size) adapter.notifyItemChanged(n)
+                adapter.adapterCallback.onItemDelete()
+            }
+
+            binding.tvTitle.text = context.resources.getStringArray(R.array.title_array)[adapterPosition]
+            binding.imageContent.setImageBitmap(bitmap)
+            ImageManager.chooseScaleType(binding.imageContent,bitmap)
         }
     }
 
-    fun updateAdapter(newList:List<String>,needClear: Boolean){
+    fun updateAdapter(newList:List<Bitmap>,needClear: Boolean){
         if(needClear) mainArray.clear()
         mainArray.addAll(newList)
         notifyDataSetChanged()

@@ -2,7 +2,9 @@ package com.andrio_kt_dev.billboard.activ
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,17 +15,19 @@ import com.andrio_kt_dev.billboard.dialoghelper.DialogSpinnerHelper
 import com.andrio_kt_dev.billboard.frag.FragmentCloseInterface
 import com.andrio_kt_dev.billboard.frag.ImageListFrag
 import com.andrio_kt_dev.billboard.utils.CityHelper
+import com.andrio_kt_dev.billboard.utils.ImageManager
 import com.andrio_kt_dev.billboard.utils.ImagePick
 import com.fxn.pix.Pix
 import com.fxn.utility.PermUtil
 
 
 class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
-    private var chooseImagerFrag : ImageListFrag? = null
+    var chooseImagerFrag : ImageListFrag? = null
 
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = DialogSpinnerHelper()
-    private lateinit var imageAdapter: ImageAdapter
+    lateinit var imageAdapter: ImageAdapter
+    var editImagePos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityEditAdsBinding.inflate(layoutInflater)
@@ -60,9 +64,10 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
 
     fun onClickSelectImg(view: View){
         if(imageAdapter.mainArray.size == 0){
-            ImagePick.getImages(this,3)
+            ImagePick.getImages(this,3, ImagePick.REQUEST_CODE_GET_IMAGES)
         } else {
-            openChooseImageFrag(imageAdapter.mainArray)
+            openChooseImageFrag(null)
+            chooseImagerFrag?.updateAdapterFromEdit(imageAdapter.mainArray)
         }
     }
 
@@ -78,7 +83,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePick.getImages(this,3)
+                    ImagePick.getImages(this,3,ImagePick.REQUEST_CODE_GET_IMAGES)
                 } else {
                     Toast.makeText(
                         this,
@@ -93,28 +98,19 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == ImagePick.REQUEST_CODE_GET_IMAGES) {
-            if (data != null) {
-                val returnValues = data.getStringArrayListExtra(Pix.IMAGE_RESULTS)
-                if (returnValues?.size!! > 1 && chooseImagerFrag == null) {
-                    openChooseImageFrag(returnValues)
-                } else if (chooseImagerFrag != null) {
-                    chooseImagerFrag?.updateAdapter(returnValues)
+        ImagePick.showImages(resultCode,requestCode,data,this)
 
-                }
-            }
-        }
     }
 
 
 
-    override fun onFragClose(list: ArrayList<String>) {
+    override fun onFragClose(list: ArrayList<Bitmap>) {
         binding.scroolViewMain.visibility = View.VISIBLE
         imageAdapter.update(list)
         chooseImagerFrag = null
     }
 
-    private fun openChooseImageFrag(newList:ArrayList<String>){
+    fun openChooseImageFrag(newList:ArrayList<String>?){
         chooseImagerFrag = ImageListFrag(this, newList)
         binding.scroolViewMain.visibility = View.GONE
         val fm = supportFragmentManager.beginTransaction()
