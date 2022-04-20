@@ -25,6 +25,7 @@
 
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:cardBackgroundColor="@color/white"
@@ -39,7 +40,7 @@
                         android:id="@+id/vpImages"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        android:padding="10dp"
+                        android:padding="3dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -53,11 +54,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
-                        android:backgroundTint="@color/BlueWhite_light"
+                        android:background="@drawable/edit_bt_selector"
                         android:contentDescription="@string/Email_hint"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
                         android:onClick="onClickSelectImg"
+                        android:padding="5dp"
                         android:src="@android:drawable/ic_menu_edit"
                         app:layout_constraintBottom_toBottomOf="@+id/vpImages"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -75,35 +77,301 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/vpImages"
-                        app:layout_constraintTop_toTopOf="@+id/vpImages" />
+                        app:layout_constraintTop_toTopOf="@+id/vpImages"
+                        tools:visibility="visible" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/tvCountrySelection"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardLocation"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
-                android:gravity="center"
-                android:onClick="onClickSelectCountry"
-                android:padding="10dp"
-                android:text="@string/select_country"
-                android:textColor="@color/black" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp">
 
-            <TextView
-                android:id="@+id/tvCitySelection"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvCountry"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/country"
+                        android:textColor="@color/Text_color" />
+
+                    <TextView
+                        android:id="@+id/tvCountrySelection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickSelectCountry"
+                        android:padding="10dp"
+                        android:text="@string/select_country"
+                        android:textColor="@color/black" />
+
+                    <LinearLayout
+                        android:id="@+id/devider1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/city"
+                        android:textColor="@color/Text_color" />
+
+                    <TextView
+                        android:id="@+id/tvCitySelection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickSelectCity"
+                        android:padding="10dp"
+                        android:text="@string/select_city"
+                        android:textColor="@color/black" />
+
+                    <LinearLayout
+                        android:id="@+id/devider2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/phone_number"
+                        android:textColor="@color/Text_color" />
+
+                    <EditText
+                        android:id="@+id/edPhoneNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/phone_number_edit"
+                        android:inputType="number"
+                        android:padding="10dp"
+                        android:textColorHint="#C3C0C0" />
+
+                    <LinearLayout
+                        android:id="@+id/devider3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvIndex"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/index"
+                        android:textColor="@color/Text_color" />
+
+                    <EditText
+                        android:id="@+id/edIndex"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/index_hint"
+                        android:inputType="number"
+                        android:padding="10dp"
+                        android:textColorHint="#C3C0C0" />
+
+                    <LinearLayout
+                        android:id="@+id/devider4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvSend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/send"
+                        android:textColor="@color/Text_color" />
+
+                    <CheckBox
+                        android:id="@+id/cbSend"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/with_send" />
+
+                    <LinearLayout
+                        android:id="@+id/devider5"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardCategory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvCateg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/category"
+                        android:textColor="@color/Text_color" />
+
+                    <TextView
+                        android:id="@+id/tvCatSelection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickSelectCategory"
+                        android:padding="10dp"
+                        android:text="@string/select_category"
+                        android:textColor="@color/black" />
+
+                    <LinearLayout
+                        android:id="@+id/devider01"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/ad_name_title"
+                        android:textColor="@color/Text_color" />
+
+                    <EditText
+                        android:id="@+id/edName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/ad_name"
+                        android:padding="10dp"
+                        android:textColorHint="#C3C0C0" />
+
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/price"
+                        android:textColor="@color/Text_color" />
+
+                    <EditText
+                        android:id="@+id/edPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/price_hint"
+                        android:padding="10dp"
+                        android:textColorHint="#C3C0C0" />
+
+                    <LinearLayout
+                        android:id="@+id/devider02"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/description"
+                        android:textColor="@color/Text_color" />
+
+                    <EditText
+                        android:id="@+id/edDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="10"
+                        android:hint="@string/description_hint"
+                        android:padding="10dp"
+                        android:textColorHint="#C3C0C0" />
+
+                    <LinearLayout
+                        android:id="@+id/devider03"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@color/BlueWhite_light"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
-                android:gravity="center"
-                android:onClick="onClickSelectCity"
-                android:padding="10dp"
-                android:text="@string/select_city"
-                android:textColor="@color/black" />
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="@color/BlueWhite_light"
+                android:onClick="onClickPublish"
+                android:text="@string/Publish"
+                android:textColor="@color/Menu_color" />
 
         </LinearLayout>
     </ScrollView>
+
 </FrameLayout>

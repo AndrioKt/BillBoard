@@ -44,7 +44,7 @@ class SelectImageRvAdapter(val adapterCallback: AdapterCallback): RecyclerView.A
         fun setData(bitmap: Bitmap){
 
             binding.imEditImage.setOnClickListener {
-                ImagePick.getImages(context as EditAdsActivity, 1, ImagePick.REQUEST_CODE_GET_SINGLE_IMAGE)
+                ImagePick.imageLauncher(context as EditAdsActivity, context.launcherSingleImage!!, 1)
                 context.editImagePos=adapterPosition
             }
             binding.imDelete.setOnClickListener {

@@ -6,12 +6,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrio_kt_dev.billboard.activ.EditAdsActivity
+import com.andrio_kt_dev.billboard.adapters.AdsRcAdapter
+import com.andrio_kt_dev.billboard.data.Ad
+import com.andrio_kt_dev.billboard.database.DBManager
+import com.andrio_kt_dev.billboard.database.ReadDataCallback
 import com.andrio_kt_dev.billboard.databinding.ActivityMainBinding
 import com.andrio_kt_dev.billboard.dialoghelper.DialogConst
 import com.andrio_kt_dev.billboard.dialoghelper.DialogHelper
@@ -22,13 +28,17 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, ReadDataCallback {
     lateinit var binding: ActivityMainBinding
     private val dialogHelper = DialogHelper(this)
-    val myAuth = FirebaseAuth.getInstance()
+    val myAuth = Firebase.auth
     lateinit var launcher: ActivityResultLauncher<Intent>
+    val dbManager = DBManager(this)
+    val adapter = AdsRcAdapter(myAuth)
 
     private lateinit var tvAccount: TextView
 
@@ -37,6 +47,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         init()
+        initRecyclerView()
+        dbManager.readDBData()
     }
 
     override fun onStart() {
@@ -63,6 +75,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
 
+    }
+
+    private fun initRecyclerView(){
+         binding.apply {
+             mainContent.rcAdView.layoutManager = LinearLayoutManager(this@MainActivity)
+             mainContent.rcAdView.adapter = adapter
+         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -124,4 +143,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun readData(list: List<Ad>) {
+        adapter.updateAdapter(list)
+        }
+
+
 }

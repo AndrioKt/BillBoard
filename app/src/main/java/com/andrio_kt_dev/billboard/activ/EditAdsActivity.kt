@@ -4,20 +4,20 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.andrio_kt_dev.billboard.R
-import com.andrio_kt_dev.billboard.adaptors.ImageAdapter
+import com.andrio_kt_dev.billboard.adapters.ImageAdapter
+import com.andrio_kt_dev.billboard.data.Ad
+import com.andrio_kt_dev.billboard.database.DBManager
 import com.andrio_kt_dev.billboard.databinding.ActivityEditAdsBinding
 import com.andrio_kt_dev.billboard.dialoghelper.DialogSpinnerHelper
 import com.andrio_kt_dev.billboard.frag.FragmentCloseInterface
 import com.andrio_kt_dev.billboard.frag.ImageListFrag
 import com.andrio_kt_dev.billboard.utils.CityHelper
-import com.andrio_kt_dev.billboard.utils.ImageManager
 import com.andrio_kt_dev.billboard.utils.ImagePick
-import com.fxn.pix.Pix
 import com.fxn.utility.PermUtil
 
 
@@ -28,6 +28,9 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     private val dialog = DialogSpinnerHelper()
     lateinit var imageAdapter: ImageAdapter
     var editImagePos = 0
+    var launcherMultiImage:ActivityResultLauncher<Intent>? = null
+    var launcherSingleImage:ActivityResultLauncher<Intent>? = null
+    private val dbManager = DBManager(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityEditAdsBinding.inflate(layoutInflater)
@@ -40,6 +43,8 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     private fun init() {
         imageAdapter = ImageAdapter()
         binding.vpImages.adapter = imageAdapter
+        launcherMultiImage = ImagePick.getLauncherForMultiImages(this)
+        launcherSingleImage = ImagePick.getLauncherForSingleImage(this)
     }
 
     //OnClicks
@@ -63,27 +68,25 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
 
 
     fun onClickSelectImg(view: View){
-        if(imageAdapter.mainArray.size == 0){
-            ImagePick.getImages(this,3, ImagePick.REQUEST_CODE_GET_IMAGES)
+        if(imageAdapter.mainArray.size == 0 && launcherMultiImage != null){
+            ImagePick.imageLauncher(this,launcherMultiImage!!, 3)
         } else {
             openChooseImageFrag(null)
             chooseImagerFrag?.updateAdapterFromEdit(imageAdapter.mainArray)
         }
     }
 
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
+            when (requestCode) {
             PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    ImagePick.getImages(this,3,ImagePick.REQUEST_CODE_GET_IMAGES)
+                   // ImagePick.getImages(this,3,ImagePick.REQUEST_CODE_GET_IMAGES)
                 } else {
                     Toast.makeText(
                         this,
@@ -94,15 +97,8 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
                 return
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        ImagePick.showImages(resultCode,requestCode,data,this)
-
-    }
-
-
 
     override fun onFragClose(list: ArrayList<Bitmap>) {
         binding.scroolViewMain.visibility = View.VISIBLE
@@ -116,5 +112,35 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         val fm = supportFragmentManager.beginTransaction()
         fm.replace(R.id.place_holder, chooseImagerFrag!!)
             .commit()
+    }
+
+    fun onClickSelectCategory(view: View){
+            val listCategories = resources.getStringArray(R.array.categories).toMutableList() as ArrayList<String>
+            dialog.showSpinnerDialog(this, listCategories,binding.tvCatSelection)
+    }
+
+    fun onClickPublish(view:View){
+        dbManager.publishAd(fillAd())
+        finish()
+    }
+
+    private fun fillAd():Ad{
+        val ad: Ad
+        binding.apply {
+            ad = Ad(
+                tvCountrySelection.text.toString(),
+                tvCitySelection.text.toString(),
+                edPhoneNumber.text.toString(),
+                edIndex.text.toString(),
+                cbSend.isChecked.toString(),
+                tvCatSelection.text.toString(),
+                edName.text.toString(),
+                edPrice.text.toString(),
+                edDescription.text.toString(),
+                dbManager.db.push().key,
+                dbManager.auth.uid
+                )
+        }
+        return ad
     }
 }

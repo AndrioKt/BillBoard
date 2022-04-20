@@ -1,4 +1,4 @@
-package com.andrio_kt_dev.billboard.adaptors
+package com.andrio_kt_dev.billboard.adapters
 
 import android.graphics.Bitmap
 import android.view.LayoutInflater

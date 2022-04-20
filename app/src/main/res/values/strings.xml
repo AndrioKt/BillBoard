@@ -6,6 +6,7 @@
     <!-- Driver menu -->
     <string name="ad_cat1">Объявление</string>
     <string name="ad_my_ads">Мои объявления</string>
+    <string name="favorites">Избранные</string>
     <string name="ad_car">Автомобили</string>
     <string name="ad_pc">Компьютеры</string>
     <string name="ad_smartphones">Смартфоны</string>
@@ -41,7 +42,27 @@
 
     <!-- Edit Activity -->
     <string name="select_country">*Выберете страну</string>
+    <string name="country">Страна</string>
     <string name="select_city">*Выберете город</string>
+    <string name="city">Город</string>
     <string name="country_not_selected">Не выбрана страна</string>
+    <string name="phone_number">Телефон</string>
+    <string name="phone_number_edit">*Номер телефона</string>
+    <string name="index">Индекс</string>
+    <string name="index_hint">*Индекс</string>
+    <string name="category">Категория</string>
+    <string name="select_category">*Выберите категорию</string>
+    <string name="price">Цена</string>
+    <string name="price_hint">*Укажите цену</string>
+    <string name="description">Описание</string>
+    <string name="description_hint">Несколько слов о товаре</string>
+    <string name="with_send">C отправкой</string>
+    <string name="send">Отправка</string>
+    <string name="Publish">Опубликовать</string>
+    <string name="ad_name">*Укажите название объявления</string>
+    <string name="ad_name_title">Название</string>
+
+    <!-- Main Activity -->
+    <string name="price_main_title">Цена:</string>
 
 </resources>
