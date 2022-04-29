@@ -1,42 +1,36 @@
 package com.andrio_kt_dev.billboard.utils
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.InputStream
 
 object ImageManager {
     const val MAX_IMAGE_SIZE = 1000
     const val WIDTH = 0
     const val HEIGHT = 1
-    fun getImageSize(uri:String): List<Int>{
+    fun getImageSize(uri:Uri, act: Activity): List<Int>{
+        val inStream = act.contentResolver.openInputStream(uri)
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
-        BitmapFactory.decodeFile(uri,options)
-        return if(imageRotation(uri)==90) listOf(options.outHeight,options.outWidth)
-        else listOf(options.outWidth,options.outHeight)
-
+        BitmapFactory.decodeStream(inStream,null, options)
+        return listOf(options.outWidth,options.outHeight)
     }
 
-    fun imageRotation(uri:String):Int{
-        val rotation: Int
-        val imageFile = File(uri)
-        val exif = ExifInterface(imageFile.absolutePath)
-        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL)
-        rotation =if (orientation == ExifInterface.ORIENTATION_ROTATE_90 || orientation == ExifInterface.ORIENTATION_ROTATE_270) 90 else 0
-        return rotation
-    }
-
-    suspend fun imageResize(uris:List<String>):List<Bitmap> = withContext(Dispatchers.IO){
+    suspend fun imageResize(uris:ArrayList<Uri>, act :Activity):List<Bitmap> = withContext(Dispatchers.IO){
         val bitmapList = ArrayList<Bitmap>()
         val tempList = ArrayList<List<Int>>()
         for(n in uris.indices){
-            val size = getImageSize(uris[n])
+            val size = getImageSize(uris[n], act)
             val imageRatio = size[WIDTH].toFloat()/size[HEIGHT].toFloat()
 
             if(imageRatio >1 ){
@@ -54,9 +48,8 @@ object ImageManager {
             }
         }
         for (i in uris.indices){
-            kotlin.runCatching { bitmapList.add(Picasso.get().load(File(uris[i])).resize(tempList[i][WIDTH], tempList[i][HEIGHT]).get()) }
+            kotlin.runCatching { bitmapList.add(Picasso.get().load(uris[i]).resize(tempList[i][WIDTH], tempList[i][HEIGHT]).get()) }
         }
-
         return@withContext bitmapList
     }
 

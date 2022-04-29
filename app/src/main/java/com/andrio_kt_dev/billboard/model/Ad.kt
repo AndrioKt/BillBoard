@@ -1,4 +1,6 @@
-package com.andrio_kt_dev.billboard.data
+package com.andrio_kt_dev.billboard.model
+
+import java.io.Serializable
 
 data class Ad(
     val country:String? = null,
@@ -11,5 +13,11 @@ data class Ad(
     val price:String? = null,
     val description:String? = null,
     val key:String? = null,
-    val uid:String? = null
-)
+    val uid:String? = null,
+    var favCounter: String = "0",
+    var isFav:Boolean = false,
+
+    var viewsCounter:String = "0",
+    var emailCounter:String? = "0",
+    var callsCounter:String? = "0"
+): Serializable

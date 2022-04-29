@@ -1,24 +1,22 @@
 package com.andrio_kt_dev.billboard.activ
 
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import com.andrio_kt_dev.billboard.MainActivity
 import com.andrio_kt_dev.billboard.R
 import com.andrio_kt_dev.billboard.adapters.ImageAdapter
-import com.andrio_kt_dev.billboard.data.Ad
-import com.andrio_kt_dev.billboard.database.DBManager
+import com.andrio_kt_dev.billboard.model.Ad
+import com.andrio_kt_dev.billboard.model.DBManager
 import com.andrio_kt_dev.billboard.databinding.ActivityEditAdsBinding
 import com.andrio_kt_dev.billboard.dialoghelper.DialogSpinnerHelper
 import com.andrio_kt_dev.billboard.frag.FragmentCloseInterface
 import com.andrio_kt_dev.billboard.frag.ImageListFrag
 import com.andrio_kt_dev.billboard.utils.CityHelper
 import com.andrio_kt_dev.billboard.utils.ImagePick
-import com.fxn.utility.PermUtil
 
 
 class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
@@ -27,24 +25,47 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     lateinit var binding: ActivityEditAdsBinding
     private val dialog = DialogSpinnerHelper()
     lateinit var imageAdapter: ImageAdapter
+    private val dbManager = DBManager()
     var editImagePos = 0
-    var launcherMultiImage:ActivityResultLauncher<Intent>? = null
-    var launcherSingleImage:ActivityResultLauncher<Intent>? = null
-    private val dbManager = DBManager(null)
+    private var isEditState = false
+    private var ad:Ad? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityEditAdsBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         init()
+        checkEditState()
     }
 
 
     private fun init() {
         imageAdapter = ImageAdapter()
         binding.vpImages.adapter = imageAdapter
-        launcherMultiImage = ImagePick.getLauncherForMultiImages(this)
-        launcherSingleImage = ImagePick.getLauncherForSingleImage(this)
+    }
+
+    private fun fillViews(ad:Ad) = with (binding){
+        tvCountrySelection.text = ad.country
+        tvCitySelection.text = ad.city
+        edPhoneNumber.setText(ad.phone)
+        edIndex.setText(ad.index)
+        cbSend.isChecked = ad.send.toBoolean()
+        tvCatSelection.text = ad.category
+        edName.setText(ad.title)
+        edPrice.setText(ad.price)
+        edDescription.setText(ad.description)
+    }
+
+    private fun isEditState():Boolean{
+        return intent.getBooleanExtra(MainActivity.EDIT_STATE, false)
+    }
+
+    private fun checkEditState(){
+        isEditState = isEditState()
+        if(isEditState){
+            ad = intent.getSerializableExtra(MainActivity.ADS_DATA) as Ad
+            if (ad != null) fillViews(ad!!)
+        }
     }
 
     //OnClicks
@@ -68,36 +89,12 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
 
 
     fun onClickSelectImg(view: View){
-        if(imageAdapter.mainArray.size == 0 && launcherMultiImage != null){
-            ImagePick.imageLauncher(this,launcherMultiImage!!, 3)
+        if(imageAdapter.mainArray.size == 0 ){
+            ImagePick.multiImageLauncher(this, 3)
         } else {
             openChooseImageFrag(null)
             chooseImagerFrag?.updateAdapterFromEdit(imageAdapter.mainArray)
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-            when (requestCode) {
-            PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS -> {
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                   // ImagePick.getImages(this,3,ImagePick.REQUEST_CODE_GET_IMAGES)
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Approve permissions to open Pix ImagePicker",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                return
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onFragClose(list: ArrayList<Bitmap>) {
@@ -106,8 +103,9 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         chooseImagerFrag = null
     }
 
-    fun openChooseImageFrag(newList:ArrayList<String>?){
-        chooseImagerFrag = ImageListFrag(this, newList)
+    fun openChooseImageFrag(newList:ArrayList<Uri>?){
+        chooseImagerFrag = ImageListFrag(this)
+        if(newList != null) chooseImagerFrag?.resizeSelectedImages(newList, true, this)
         binding.scroolViewMain.visibility = View.GONE
         val fm = supportFragmentManager.beginTransaction()
         fm.replace(R.id.place_holder, chooseImagerFrag!!)
@@ -120,8 +118,19 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     }
 
     fun onClickPublish(view:View){
-        dbManager.publishAd(fillAd())
-        finish()
+        val adTemp = fillAd()
+        if(isEditState) {
+            dbManager.publishAd(adTemp.copy(key = ad?.key), onPublishFinish())
+
+        } else dbManager.publishAd(adTemp, onPublishFinish())
+    }
+
+    private fun onPublishFinish() : DBManager.FinishWorkListener{
+        return object :DBManager.FinishWorkListener{
+            override fun onFinish() {
+                finish()
+            }
+        }
     }
 
     private fun fillAd():Ad{
@@ -138,7 +147,8 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
                 edPrice.text.toString(),
                 edDescription.text.toString(),
                 dbManager.db.push().key,
-                dbManager.auth.uid
+                dbManager.auth.uid,
+                "0"
                 )
         }
         return ad

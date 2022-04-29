@@ -8,7 +8,7 @@ import com.andrio_kt_dev.billboard.R
 import com.andrio_kt_dev.billboard.accounthelper.AccountHelper
 import com.andrio_kt_dev.billboard.databinding.SigninDialogBinding
 
-class DialogHelper(private val act: MainActivity) {
+class DialogHelper(val act: MainActivity) {
 
     val accHelper = AccountHelper(act)
     fun createSignDialog(index:Int){

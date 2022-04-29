@@ -64,5 +64,8 @@
 
     <!-- Main Activity -->
     <string name="price_main_title">Цена:</string>
+    <string name="general">Все категории</string>
+    <string name="empty">В данной категории объявления отсутствуют</string>
+    <string name="guest">Гость</string>
 
 </resources>
