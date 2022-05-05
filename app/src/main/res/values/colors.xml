@@ -12,4 +12,6 @@
     <color name="grey_light">#ECE1E1</color>
     <color name="BlueWhite_light">#BECCFB</color>
     <color name="Text_color">#9C043EB4</color>
+    <color name="Ad_color">#A9FAF09C</color>
+    <color name="Ad_color_back">#A9AEA562</color>
 </resources>

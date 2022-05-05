@@ -53,13 +53,13 @@ class ImageListFrag (private val onFragCloseInterface: FragmentCloseInterface): 
 
     override fun onDetach() {
         super.onDetach()
-        onFragCloseInterface.onFragClose(adapter.mainArray)
-        job?.cancel()
     }
 
     override fun onClose() {
         super.onClose()
         activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
+        onFragCloseInterface.onFragClose(adapter.mainArray)
+        job?.cancel()
     }
 
     private fun setUpToolbar(){

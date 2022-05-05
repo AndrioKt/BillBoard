@@ -8,34 +8,44 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andrio_kt_dev.billboard.MainActivity
 import com.andrio_kt_dev.billboard.R
+import com.andrio_kt_dev.billboard.activ.DescriptionActivity
 import com.andrio_kt_dev.billboard.activ.EditAdsActivity
 import com.andrio_kt_dev.billboard.model.Ad
 import com.andrio_kt_dev.billboard.databinding.AdListItemBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.squareup.picasso.Picasso
 
 class AdsRcAdapter(val act:MainActivity): RecyclerView.Adapter<AdsRcAdapter.AdsViewHolder>() {
     val adArray = ArrayList<Ad>()
     class AdsViewHolder(val binding: AdListItemBinding,val act:MainActivity) : RecyclerView.ViewHolder(binding.root) {
 
-        fun setData(ad: Ad){
+        fun setData(ad: Ad) {
             binding.apply {
                 tvTitle.text = ad.title
                 tvDescr.text = ad.description
                 tvPrice.text = ad.price
                 tvViewCount.text = ad.viewsCounter
                 tvFavCount.text = ad.favCounter
-                if(ad.isFav) ibFav.setImageResource(R.drawable.ic_fav_presed)
-                else ibFav.setImageResource(R.drawable.ic_fav_unpresed)
-                ibFav.setOnClickListener {
-                    if(act.myAuth.currentUser?.isAnonymous == false) act.onFavClicked(ad)
-                }
+                isFav(ad)
+                showOwnerPanel(checkOwner(ad))
+                onClicks(ad)
+                Picasso.get().load(ad.mainImage).into(imMain)
             }
-            showOwnerPanel(checkOwner(ad))
+        }
+            private fun isFav(ad: Ad){
+                if(ad.isFav)  binding.ibFav.setImageResource(R.drawable.ic_fav_presed)
+                else  binding.ibFav.setImageResource(R.drawable.ic_fav_unpresed)
+            }
+
+        private fun onClicks(ad: Ad){
+            binding.ibFav.setOnClickListener {
+                if(act.myAuth.currentUser?.isAnonymous == false) act.onFavClicked(ad)
+            }
             itemView.setOnClickListener {
                 act.onADViewed(ad)
             }
             binding.ibEdit.setOnClickListener(onClickEdit(ad))
-            binding.ibDel.setOnClickListener{
+            binding.ibDel.setOnClickListener {
                 act.onDeleteItem(ad)
             }
         }

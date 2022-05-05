@@ -32,7 +32,6 @@ class AccountHelper(private val act:MainActivity) {
     }
 
     private fun signInWithEmailExceptions(exception:Exception, email: String, password: String){
-        //Log.d("MyLog","Google signIn Error: ${exception}")
         when {
             (exception is FirebaseAuthInvalidCredentialsException) -> {
                 if (exception.errorCode == FirebaseConst.ERROR_INVALID_EMAIL) {
@@ -59,22 +58,20 @@ class AccountHelper(private val act:MainActivity) {
     }
 
     private fun signUpWithEmailException(exception:Exception, email: String, password: String){
-        //Log.d("MyLog","Google signIn Error: ${exception}")
         when {
             (exception is FirebaseAuthUserCollisionException) -> {
-                val exception = exception as FirebaseAuthUserCollisionException
+                val exception = exception
                 if (exception.errorCode == FirebaseConst.ERROR_EMAIL_ALREADY_IN_USE) {
                     linkEmailToGoogle(email, password)//link email
                 }
             }
             (exception is FirebaseAuthInvalidCredentialsException) -> {
-                val exception = exception as FirebaseAuthInvalidCredentialsException
+                val exception = exception
                 if (exception.errorCode == FirebaseConst.ERROR_INVALID_EMAIL) {
                     Toast.makeText(act, "ERROR_INVALID_EMAIL", Toast.LENGTH_LONG).show()
                 }
             }
             (exception is FirebaseAuthWeakPasswordException) -> {
-               // Log.d("MyLog","Google signIn Error: ${exception.errorCode}")
                 if (exception.errorCode == FirebaseConst.ERROR_WEAK_PASSWORD) {
                     Toast.makeText(act, "ERROR_WEAK_PASSWORD", Toast.LENGTH_LONG).show()
                 }

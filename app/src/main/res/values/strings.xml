@@ -20,7 +20,7 @@
     <string name="open_menu">Open</string>
     <string name="close_menu">Close</string>
     <!-- Sign dialog -->
-    <string name="Email_hint">Email:</string>
+    <string name="Email_hint">Email</string>
     <string name="password_hint">Password:</string>
     <string name="forget_password_button">Забыли пароль?</string>
     <string name="sign_in_action">Войти</string>
@@ -67,5 +67,17 @@
     <string name="general">Все категории</string>
     <string name="empty">В данной категории объявления отсутствуют</string>
     <string name="guest">Гость</string>
+
+    <!-- Desc Activity -->
+    <string name="phone_title">Телефон:</string>
+    <string name="country_title">Страна:</string>
+    <string name="city_title">Город:</string>
+    <string name="Index_title">Индекс:</string>
+    <string name="Send_title">Отправка:</string>
+    <string name="Send_yes">Да</string>
+    <string name="Send_no">Нет</string>
+    <string name="email">Email:</string>
+    <string name="send_email_subject">Объявление</string>
+    <string name="send_email_text">Здравствуйте. Меня заинтересовало Ваше объявление!</string>
 
 </resources>

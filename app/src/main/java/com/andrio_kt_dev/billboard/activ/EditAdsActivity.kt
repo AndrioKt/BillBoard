@@ -1,11 +1,13 @@
 package com.andrio_kt_dev.billboard.activ
 
 import android.graphics.Bitmap
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import com.andrio_kt_dev.billboard.MainActivity
 import com.andrio_kt_dev.billboard.R
 import com.andrio_kt_dev.billboard.adapters.ImageAdapter
@@ -16,7 +18,11 @@ import com.andrio_kt_dev.billboard.dialoghelper.DialogSpinnerHelper
 import com.andrio_kt_dev.billboard.frag.FragmentCloseInterface
 import com.andrio_kt_dev.billboard.frag.ImageListFrag
 import com.andrio_kt_dev.billboard.utils.CityHelper
+import com.andrio_kt_dev.billboard.utils.ImageManager
 import com.andrio_kt_dev.billboard.utils.ImagePick
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
+import java.io.ByteArrayOutputStream
 
 
 class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
@@ -27,6 +33,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     lateinit var imageAdapter: ImageAdapter
     private val dbManager = DBManager()
     var editImagePos = 0
+    private var imgIndex = 0
     private var isEditState = false
     private var ad:Ad? = null
 
@@ -36,6 +43,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         setContentView(binding.root)
         init()
         checkEditState()
+        imageCounter()
     }
 
 
@@ -54,6 +62,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         edName.setText(ad.title)
         edPrice.setText(ad.price)
         edDescription.setText(ad.description)
+        ImageManager.fillImageArray(ad, imageAdapter)
     }
 
     private fun isEditState():Boolean{
@@ -118,11 +127,10 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     }
 
     fun onClickPublish(view:View){
-        val adTemp = fillAd()
+        ad = fillAd()
         if(isEditState) {
-            dbManager.publishAd(adTemp.copy(key = ad?.key), onPublishFinish())
-
-        } else dbManager.publishAd(adTemp, onPublishFinish())
+            ad?.copy(key = ad?.key)?.let { dbManager.publishAd(it, onPublishFinish()) }
+        } else uploadImages()
     }
 
     private fun onPublishFinish() : DBManager.FinishWorkListener{
@@ -146,11 +154,64 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
                 edName.text.toString(),
                 edPrice.text.toString(),
                 edDescription.text.toString(),
+                edEmail.text.toString(),
+                "empty",
+                "empty",
+                "empty",
                 dbManager.db.push().key,
                 dbManager.auth.uid,
                 "0"
                 )
         }
         return ad
+    }
+
+    private fun uploadImages(){
+        if(imageAdapter.mainArray.size == imgIndex){
+            dbManager.publishAd(ad!!, onPublishFinish())
+            return
+        }
+       val byteArray = imageToByteArray(imageAdapter.mainArray[imgIndex])
+        loadSingleImage(byteArray){
+            nextImg(it.result.toString())
+        }
+    }
+
+    private fun nextImg(uri:String){
+        setImageUri(uri)
+        imgIndex++
+        uploadImages()
+    }
+
+    private fun setImageUri(uri:String){
+        when(imgIndex){
+            0->ad = ad?.copy(mainImage = uri)
+            1->ad = ad?.copy(image2 = uri)
+            2->ad = ad?.copy(image3 = uri)
+        }
+    }
+
+    private fun imageToByteArray(bitmap: Bitmap): ByteArray{
+        val outStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outStream)
+        return outStream.toByteArray()
+    }
+
+    private fun loadSingleImage(byteArray: ByteArray, listener: OnCompleteListener<Uri>){
+        val imStorageRef = dbManager.dbStorage.child(dbManager.auth.uid!!).child("image_${System.currentTimeMillis()}")
+        val uploadTask = imStorageRef.putBytes(byteArray)
+        uploadTask.continueWithTask{
+            task-> imStorageRef.downloadUrl
+        }.addOnCompleteListener(listener)
+    }
+
+    private fun imageCounter(){
+        binding.vpImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val imageCounter = "${position + 1}/${binding.vpImages.adapter?.itemCount}"
+                binding.tvImageCounter.text =  imageCounter
+            }
+        })
     }
 }

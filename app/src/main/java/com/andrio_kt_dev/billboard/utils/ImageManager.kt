@@ -7,8 +7,12 @@ import android.net.Uri
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
+import com.andrio_kt_dev.billboard.adapters.ImageAdapter
+import com.andrio_kt_dev.billboard.model.Ad
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.InputStream
@@ -56,5 +60,21 @@ object ImageManager {
     fun chooseScaleType(im: ImageView,bitmap: Bitmap){
         if(bitmap.width>bitmap.height) im.scaleType = ImageView.ScaleType.CENTER_CROP
         else im.scaleType = ImageView.ScaleType.CENTER_INSIDE
+    }
+
+    private suspend fun getBitmapFromUri(uris:List<String?>):List<Bitmap> = withContext(Dispatchers.IO){
+        val bitmapList = ArrayList<Bitmap>()
+        for (i in uris.indices){
+            kotlin.runCatching { bitmapList.add(Picasso.get().load(uris[i]).get()) }
+        }
+        return@withContext bitmapList
+    }
+
+    fun fillImageArray(ad: Ad, adapter: ImageAdapter){
+        val listUris = listOf(ad.mainImage, ad.image2, ad.image3)
+        CoroutineScope(Dispatchers.Main).launch {
+            val bitMapList = getBitmapFromUri(listUris)
+            adapter.update(bitMapList as ArrayList<Bitmap>)
+        }
     }
 }

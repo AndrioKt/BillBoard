@@ -3,18 +3,23 @@ package com.andrio_kt_dev.billboard
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andrio_kt_dev.billboard.accounthelper.AccountHelper
+import com.andrio_kt_dev.billboard.activ.DescriptionActivity
 import com.andrio_kt_dev.billboard.activ.EditAdsActivity
 import com.andrio_kt_dev.billboard.adapters.AdsRcAdapter
 import com.andrio_kt_dev.billboard.databinding.ActivityMainBinding
@@ -30,6 +35,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, AdsRcAdapter.Listener {
@@ -40,6 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     val adapter = AdsRcAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
     private lateinit var tvAccount: TextView
+    private lateinit var imAccount: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -73,9 +80,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setSupportActionBar(binding.mainContent.toolbar)
             val toggle = ActionBarDrawerToggle(this,binding.drawerLayout, binding.mainContent.toolbar,R.string.open_menu, R.string.close_menu)
             binding.drawerLayout.addDrawerListener(toggle)
+            navViewSettings()
             toggle.syncState()
             binding.navView.setNavigationItemSelectedListener(this)
             tvAccount = binding.navView.getHeaderView(0).findViewById(R.id.tvAccountMail)
+            imAccount = binding.navView.getHeaderView(0).findViewById(R.id.imAccount)
+
             launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
                 try{
@@ -158,12 +168,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             dialogHelper.accHelper.signInAnon(object:AccountHelper.Listener{
                 override fun onComplete() {
                     tvAccount.setText(R.string.guest)
+                    imAccount.setImageResource(R.drawable.ic_default_avatar)
                 }
             })
         } else if(user.isAnonymous){
             tvAccount.setText(R.string.guest)
+            imAccount.setImageResource(R.drawable.ic_default_avatar)
         } else if (user.isAnonymous == false) {
             tvAccount.text = user.email
+            Picasso.get().load(user.photoUrl).into(imAccount)
         }
     }
 
@@ -189,9 +202,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onADViewed(ad: Ad) {
         firebaseViewModel.adViewed(ad)
+        val intent = Intent(this, DescriptionActivity::class.java)
+        intent.putExtra("AD", ad)
+        startActivity(intent)
     }
 
     override fun onFavClicked(ad: Ad) {
         firebaseViewModel.onFavClick(ad)
+    }
+
+    private fun navViewSettings() = with(binding) {
+        val menu = navView.menu
+        val adCategories = menu.findItem(R.id.adCategories)
+        val accCategories = menu.findItem(R.id.accCategories)
+        val spanAdsCat = SpannableString(adCategories.title)
+        val spanAccCat = SpannableString(accCategories.title)
+        spanAdsCat.setSpan(ForegroundColorSpan(ContextCompat.getColor(this@MainActivity,R.color.Text_color)),0,adCategories.title.length,0)
+        spanAccCat.setSpan(ForegroundColorSpan(ContextCompat.getColor(this@MainActivity,R.color.Text_color)),0,accCategories.title.length,0)
+        adCategories.title = spanAdsCat
+        accCategories.title = spanAccCat
     }
 }
