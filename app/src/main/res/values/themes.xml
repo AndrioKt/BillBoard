@@ -24,6 +24,14 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="AppTheme.Filter" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/Menu_color</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="CustomBar" >
         <!-- Primary brand color. -->
         <item name = "android:textColorSecondary">@color/white</item>

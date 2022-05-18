@@ -119,9 +119,9 @@ class AccountHelper(private val act:MainActivity) {
         act.myAuth.currentUser?.delete()?.addOnCompleteListener { task ->
             if (task.isSuccessful){
                 act.myAuth.signInWithCredential(credential).addOnCompleteListener {
-                        task -> if (task.isSuccessful) {
+                        task2 -> if (task2.isSuccessful) {
                     Toast.makeText(act, "Sign in done",Toast.LENGTH_LONG).show()
-                    act.uiUpdate(task.result?.user)
+                    act.uiUpdate(task2.result?.user)
                 } else {
                     Log.d("MyLog","Google signIn Error: ${task.exception}")
                 }

@@ -46,7 +46,6 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         imageCounter()
     }
 
-
     private fun init() {
         imageAdapter = ImageAdapter()
         binding.vpImages.adapter = imageAdapter
@@ -62,6 +61,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         edName.setText(ad.title)
         edPrice.setText(ad.price)
         edDescription.setText(ad.description)
+        updateImgCounter(0)
         ImageManager.fillImageArray(ad, imageAdapter)
     }
 
@@ -110,6 +110,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         binding.scroolViewMain.visibility = View.VISIBLE
         imageAdapter.update(list)
         chooseImagerFrag = null
+        updateImgCounter(binding.vpImages.currentItem)
     }
 
     fun openChooseImageFrag(newList:ArrayList<Uri>?){
@@ -127,24 +128,37 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
     }
 
     fun onClickPublish(view:View){
+        if(isFieldsEmpty()){
+            showToast(getString(R.string.fields_fill))
+            return
+        }
+        binding.progressLay.visibility = View.VISIBLE
         ad = fillAd()
-        if(isEditState) {
-            ad?.copy(key = ad?.key)?.let { dbManager.publishAd(it, onPublishFinish()) }
-        } else uploadImages()
+        uploadImages()
     }
 
     private fun onPublishFinish() : DBManager.FinishWorkListener{
         return object :DBManager.FinishWorkListener{
-            override fun onFinish() {
-                finish()
+            override fun onFinish(isDone: Boolean) {
+                binding.progressLay.visibility = View.GONE
+                if(isDone) finish()
             }
         }
     }
 
+    private fun isFieldsEmpty():Boolean = with(binding){
+        return tvCountrySelection.text.toString() == getString(R.string.select_country)
+                || tvCitySelection.text.toString() == getString(R.string.select_city)
+                || tvCatSelection.text.toString() == getString(R.string.select_category)
+                || edPhoneNumber.text.isEmpty()
+                || edPrice.text.isEmpty()
+                || edName.text.isEmpty()
+    }
+
     private fun fillAd():Ad{
-        val ad: Ad
+        val adTemp: Ad
         binding.apply {
-            ad = Ad(
+            adTemp = Ad(
                 tvCountrySelection.text.toString(),
                 tvCitySelection.text.toString(),
                 edPhoneNumber.text.toString(),
@@ -155,25 +169,43 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
                 edPrice.text.toString(),
                 edDescription.text.toString(),
                 edEmail.text.toString(),
-                "empty",
-                "empty",
-                "empty",
-                dbManager.db.push().key,
+                ad?.mainImage ?: "empty",
+                ad?.image2 ?: "empty",
+                ad?.image3 ?: "empty",
+                ad?.key ?: dbManager.db.push().key,
                 dbManager.auth.uid,
+                ad?.time ?: System.currentTimeMillis().toString(),
                 "0"
                 )
         }
-        return ad
+        return adTemp
     }
 
-    private fun uploadImages(){
-        if(imageAdapter.mainArray.size == imgIndex){
+    private fun uploadImages() {
+        if (imgIndex == ImagePick.MAX_IMAGE_COUNT) {
             dbManager.publishAd(ad!!, onPublishFinish())
             return
         }
-       val byteArray = imageToByteArray(imageAdapter.mainArray[imgIndex])
-        loadSingleImage(byteArray){
-            nextImg(it.result.toString())
+        val oldUrl = getURL()
+        if (imageAdapter.mainArray.size > imgIndex) {
+            val byteArray = imageToByteArray(imageAdapter.mainArray[imgIndex])
+            if (oldUrl.startsWith("http")) {
+                updateImage(byteArray, oldUrl) {
+                    nextImg(it.result.toString())
+                }
+            } else {
+                loadSingleImage(byteArray) {
+                    nextImg(it.result.toString())
+                }
+            }
+        } else {
+            if (oldUrl.startsWith("http")) {
+                deleteImgByUrl(oldUrl) {
+                    nextImg("empty")
+                }
+            } else {
+                nextImg("empty")
+            }
         }
     }
 
@@ -205,13 +237,36 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         }.addOnCompleteListener(listener)
     }
 
+    private fun getURL():String{
+        return listOf(ad?.mainImage!!, ad?.image2!!, ad?.image3!!)[imgIndex]
+    }
+
+    private fun updateImage(byteArray: ByteArray, url:String, listener: OnCompleteListener<Uri>){
+        val imStorageRef = dbManager.dbStorage.storage.getReferenceFromUrl(url)
+        val uploadTask = imStorageRef.putBytes(byteArray)
+        uploadTask.continueWithTask{
+                task-> imStorageRef.downloadUrl
+        }.addOnCompleteListener(listener)
+    }
+
+    private fun deleteImgByUrl(oldUrl:String, listener: OnCompleteListener<Void>){
+       dbManager.dbStorage.storage.getReferenceFromUrl(oldUrl).delete().addOnCompleteListener(listener)
+    }
+
     private fun imageCounter(){
         binding.vpImages.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val imageCounter = "${position + 1}/${binding.vpImages.adapter?.itemCount}"
-                binding.tvImageCounter.text =  imageCounter
+                updateImgCounter(position)
             }
         })
+    }
+
+    private fun updateImgCounter(counter:Int){
+        var index = 1
+        val itemCount = binding.vpImages.adapter?.itemCount
+        if(itemCount == 0) index = 0
+        val imageCounter = "${counter + index}/$itemCount"
+        binding.tvImageCounter.text =  imageCounter
     }
 }

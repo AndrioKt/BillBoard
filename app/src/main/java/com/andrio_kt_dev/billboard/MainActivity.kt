@@ -18,14 +18,17 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.andrio_kt_dev.billboard.accounthelper.AccountHelper
 import com.andrio_kt_dev.billboard.activ.DescriptionActivity
 import com.andrio_kt_dev.billboard.activ.EditAdsActivity
+import com.andrio_kt_dev.billboard.activ.FilterActivity
 import com.andrio_kt_dev.billboard.adapters.AdsRcAdapter
 import com.andrio_kt_dev.billboard.databinding.ActivityMainBinding
 import com.andrio_kt_dev.billboard.dialoghelper.DialogConst
 import com.andrio_kt_dev.billboard.dialoghelper.DialogHelper
 import com.andrio_kt_dev.billboard.model.Ad
+import com.andrio_kt_dev.billboard.utils.FilterManager
 import com.andrio_kt_dev.billboard.viewmodel.FirebaseViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -43,10 +46,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val dialogHelper = DialogHelper(this)
     val myAuth = Firebase.auth
     lateinit var launcher: ActivityResultLauncher<Intent>
+    lateinit var filterLauncher: ActivityResultLauncher<Intent>
     val adapter = AdsRcAdapter(this)
     private val firebaseViewModel: FirebaseViewModel by viewModels()
     private lateinit var tvAccount: TextView
     private lateinit var imAccount: ImageView
+    private var clearUpdate: Boolean = true
+    private var currentCat: String? = null
+    private var filter: String = "empty"
+    private var filterDb: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -55,13 +63,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         init()
         initRecyclerView()
         initViewModel()
-        firebaseViewModel.loadAllAds()
         bottomMenuOnClick()
+        scrollListener()
+        onActivityResultFilter()
     }
 
     override fun onResume() {
         super.onResume()
         binding.mainContent.bNavView.selectedItemId = R.id.id_home
+    }
+
+    private fun onActivityResultFilter(){
+        filterLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            if(it.resultCode == RESULT_OK){
+                filter = it.data?.getStringExtra(FilterActivity.FILTER_KEY)!!
+                Log.d("MyLog", "F $filter")
+               Log.d("MyLog", "getF ${FilterManager.getFilter(filter)}")
+                filterDb = FilterManager.getFilter(filter)
+            } else if (it.resultCode == RESULT_CANCELED){
+                filterDb = ""
+                filter = "empty"
+            }
+        }
     }
 
     override fun onStart() {
@@ -71,12 +94,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initViewModel(){
         firebaseViewModel.liveAdsData.observe(this) {
-            adapter.updateAdapter(it)
-            binding.mainContent.tvEmpty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            val list = getAdsByCat(it)
+            if (!clearUpdate) adapter.updateAdapter(list)
+            else adapter.updateAdapterWithClear(list)
+            binding.mainContent.tvEmpty.visibility =
+                if (adapter.itemCount == 0) View.VISIBLE else View.GONE
         }
     }
 
+    private fun getAdsByCat(list: ArrayList<Ad>):ArrayList<Ad>{
+        val tempList = ArrayList<Ad>()
+        tempList.addAll(list)
+        if(currentCat != getString(R.string.general)) {
+            tempList.clear()
+            list.forEach{
+                if(currentCat == it.category) tempList.add(it)
+            }
+        }
+        tempList.reverse()
+        return tempList
+    }
+
     private fun init(){
+            currentCat = getString(R.string.general)
             setSupportActionBar(binding.mainContent.toolbar)
             val toggle = ActionBarDrawerToggle(this,binding.drawerLayout, binding.mainContent.toolbar,R.string.open_menu, R.string.close_menu)
             binding.drawerLayout.addDrawerListener(toggle)
@@ -101,6 +141,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun bottomMenuOnClick() = with(binding){
         mainContent.bNavView.setOnNavigationItemSelectedListener { item ->
+            clearUpdate = true
             when(item.itemId){
                 R.id.id_new_ad ->  {
                     val intent = Intent(this@MainActivity,EditAdsActivity::class.java)
@@ -114,7 +155,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     firebaseViewModel.loadMyFavs()
                 }
                 R.id.id_home -> {
-                    firebaseViewModel.loadAllAds()
+                    currentCat = getString(R.string.general)
+                    firebaseViewModel.loadAllAdsFirstPage(filterDb)
                     mainContent.toolbar.title = getString(R.string.general)
                 }
             }
@@ -130,18 +172,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        clearUpdate = true
         when(item.itemId){
             R.id.id_my_ads ->{
                 firebaseViewModel.loadMyAds()
                 binding.mainContent.toolbar.title = getString(R.string.ad_my_ads)
             }
             R.id.id_cars ->{
+                getAdsFromCat(getString(R.string.ad_car))
             }
             R.id.id_pc ->{
+                getAdsFromCat(getString(R.string.ad_pc))
             }
             R.id.id_smart ->{
+                getAdsFromCat(getString(R.string.ad_smartphones))
             }
             R.id.id_home_appl ->{
+                getAdsFromCat(getString(R.string.ad_home_appliances))
             }
             R.id.id_sign_in ->{
                 dialogHelper.createSignDialog(DialogConst.SIGN_IN_STATE)
@@ -161,6 +208,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun getAdsFromCat(cat:String){
+        currentCat = cat
+        firebaseViewModel.loadAllAdsFromCat(cat, filterDb)
     }
 
     fun uiUpdate(user: FirebaseUser?){
@@ -185,15 +237,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return GoogleSignIn.getClient(this,gso)
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu,menu)
         return super.onCreateOptionsMenu(menu)
     }
 
-    companion object{
-        const val EDIT_STATE = "edit_state"
-        const val ADS_DATA = "ads_data"
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.filter) {
+            val intent = Intent(this@MainActivity, FilterActivity::class.java).apply {
+                putExtra(FilterActivity.FILTER_KEY, filter)
+            }
+                filterLauncher.launch(intent)
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDeleteItem(ad: Ad) {
@@ -221,5 +277,36 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         spanAccCat.setSpan(ForegroundColorSpan(ContextCompat.getColor(this@MainActivity,R.color.Text_color)),0,accCategories.title.length,0)
         adCategories.title = spanAdsCat
         accCategories.title = spanAccCat
+    }
+
+    private fun scrollListener() = with(binding.mainContent){
+        rcAdView.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if(!recyclerView.canScrollVertically(SCROLL_DOWN) && newState == RecyclerView.SCROLL_STATE_IDLE){
+                    clearUpdate = false
+                    val adsList = firebaseViewModel.liveAdsData.value!!
+                    if(adsList.isNotEmpty()){
+                        getAdsFromCat(adsList)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun getAdsFromCat(adsList: ArrayList<Ad>){
+        adsList[0].let {
+            if (currentCat == getString(R.string.general)) {
+                firebaseViewModel.loadAllAdsNextPage(it.time, filterDb)
+            } else {
+                    firebaseViewModel.loadAllAdsFromCatNextPage(it.category!!, it.time, filterDb)
+            }
+        }
+    }
+
+    companion object{
+        const val EDIT_STATE = "edit_state"
+        const val ADS_DATA = "ads_data"
+        const val SCROLL_DOWN = 1
     }
 }

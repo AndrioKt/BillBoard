@@ -14,4 +14,5 @@
     <color name="Text_color">#9C043EB4</color>
     <color name="Ad_color">#A9FAF09C</color>
     <color name="Ad_color_back">#A9AEA562</color>
+    <color name="loadBack">#8A131313</color>
 </resources>

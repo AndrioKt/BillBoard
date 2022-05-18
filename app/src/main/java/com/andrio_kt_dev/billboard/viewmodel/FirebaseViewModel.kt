@@ -8,8 +8,32 @@ import com.andrio_kt_dev.billboard.model.DBManager
 class FirebaseViewModel:ViewModel() {
     private val dbManager = DBManager()
     val liveAdsData = MutableLiveData<ArrayList<Ad>>()
-    fun loadAllAds(){
-        dbManager.getAllAds(object: DBManager.ReadDataCallback{
+    fun loadAllAdsFirstPage(filter:String){
+        dbManager.getAllAdsFirstPage(filter, object: DBManager.ReadDataCallback{
+            override fun readData(list: ArrayList<Ad>) {
+                liveAdsData.value = list
+            }
+        })
+    }
+
+    fun loadAllAdsNextPage(time: String, filter: String){
+        dbManager.getAllAdsNextPage(time, filter, object: DBManager.ReadDataCallback{
+            override fun readData(list: ArrayList<Ad>) {
+                liveAdsData.value = list
+            }
+        })
+    }
+
+    fun loadAllAdsFromCat(cat: String, filter:String){
+        dbManager.getAllAdsFromCatFirstPage(cat, filter, object: DBManager.ReadDataCallback{
+            override fun readData(list: ArrayList<Ad>) {
+                liveAdsData.value = list
+            }
+        })
+    }
+
+    fun loadAllAdsFromCatNextPage(cat: String, time: String, filter: String){
+        dbManager.getAllAdsFromCatNextPage(cat, time, filter, object: DBManager.ReadDataCallback{
             override fun readData(list: ArrayList<Ad>) {
                 liveAdsData.value = list
             }
@@ -38,7 +62,7 @@ class FirebaseViewModel:ViewModel() {
 
     fun deleteItem(ad:Ad){
         dbManager.deleteAd(ad, object: DBManager.FinishWorkListener{
-            override fun onFinish() {
+            override fun onFinish(isDone: Boolean) {
                 val updatedList = liveAdsData.value
                 updatedList?.remove(ad)
                 liveAdsData.postValue(updatedList)
@@ -48,7 +72,7 @@ class FirebaseViewModel:ViewModel() {
 
     fun onFavClick(ad:Ad){
         dbManager.onFavClick(ad, object : DBManager.FinishWorkListener{
-            override fun onFinish() {
+            override fun onFinish(isDone: Boolean) {
                 val updatedList = liveAdsData.value
                 val pos = updatedList?.indexOf(ad)
                 if(pos != -1) {

@@ -61,12 +61,14 @@
     <string name="Publish">Опубликовать</string>
     <string name="ad_name">*Укажите название объявления</string>
     <string name="ad_name_title">Название</string>
+    <string name="fields_fill">Заполните все обязательные(*) поля!</string>
 
     <!-- Main Activity -->
     <string name="price_main_title">Цена:</string>
     <string name="general">Все категории</string>
     <string name="empty">В данной категории объявления отсутствуют</string>
     <string name="guest">Гость</string>
+    <string name="publish_time">Время публикации: </string>
 
     <!-- Desc Activity -->
     <string name="phone_title">Телефон:</string>
@@ -79,5 +81,9 @@
     <string name="email">Email:</string>
     <string name="send_email_subject">Объявление</string>
     <string name="send_email_text">Здравствуйте. Меня заинтересовало Ваше объявление!</string>
+
+    <!-- Filter Activity -->
+    <string name="bt_done_filter">Применить фильтр</string>
+    <string name="bt_clear_filter">Очистить фильтр</string>
 
 </resources>

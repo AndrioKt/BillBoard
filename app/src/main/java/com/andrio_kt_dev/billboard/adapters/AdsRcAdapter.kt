@@ -1,6 +1,7 @@
 package com.andrio_kt_dev.billboard.adapters
 
 import android.content.Intent
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +15,18 @@ import com.andrio_kt_dev.billboard.model.Ad
 import com.andrio_kt_dev.billboard.databinding.AdListItemBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AdsRcAdapter(val act:MainActivity): RecyclerView.Adapter<AdsRcAdapter.AdsViewHolder>() {
     val adArray = ArrayList<Ad>()
-    class AdsViewHolder(val binding: AdListItemBinding,val act:MainActivity) : RecyclerView.ViewHolder(binding.root) {
+    private var timeFormatter:SimpleDateFormat? = null
+
+    init {
+         timeFormatter = SimpleDateFormat("dd.MM.yyyy - hh:mm", Locale.getDefault())
+    }
+    class AdsViewHolder(val binding: AdListItemBinding,val act:MainActivity,val formatter:SimpleDateFormat) : RecyclerView.ViewHolder(binding.root) {
 
         fun setData(ad: Ad) {
             binding.apply {
@@ -26,16 +35,26 @@ class AdsRcAdapter(val act:MainActivity): RecyclerView.Adapter<AdsRcAdapter.AdsV
                 tvPrice.text = ad.price
                 tvViewCount.text = ad.viewsCounter
                 tvFavCount.text = ad.favCounter
+                val publishTime = act.getString(R.string.publish_time) + " " + getTimeFromMil(ad.time)
+                    tvPublishTime.text = publishTime
+                onClicks(ad)
                 isFav(ad)
                 showOwnerPanel(checkOwner(ad))
-                onClicks(ad)
-                Picasso.get().load(ad.mainImage).into(imMain)
+                if(ad.mainImage!="empty")Picasso.get().load(ad.mainImage).into(imMain)
+                else imMain.setImageResource(R.drawable.ic_deafault_ad_img)
             }
         }
-            private fun isFav(ad: Ad){
-                if(ad.isFav)  binding.ibFav.setImageResource(R.drawable.ic_fav_presed)
-                else  binding.ibFav.setImageResource(R.drawable.ic_fav_unpresed)
-            }
+
+        private fun getTimeFromMil(timeMil:String):String{
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = timeMil.toLong()
+            return formatter.format(calendar.time)
+        }
+
+        private fun isFav(ad: Ad) {
+            if (ad.isFav) binding.ibFav.setImageResource(R.drawable.ic_fav_presed)
+            else binding.ibFav.setImageResource(R.drawable.ic_fav_unpresed)
+        }
 
         private fun onClicks(ad: Ad){
             binding.ibFav.setOnClickListener {
@@ -73,7 +92,7 @@ class AdsRcAdapter(val act:MainActivity): RecyclerView.Adapter<AdsRcAdapter.AdsV
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdsViewHolder {
         val binding = AdListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return AdsViewHolder(binding,act)
+        return AdsViewHolder(binding,act, timeFormatter!!)
     }
 
     override fun onBindViewHolder(holder: AdsViewHolder, position: Int) {
@@ -84,11 +103,22 @@ class AdsRcAdapter(val act:MainActivity): RecyclerView.Adapter<AdsRcAdapter.AdsV
         return adArray.size
     }
     fun updateAdapter(newList:List<Ad>){
+        val tempArray = ArrayList<Ad>()
+        tempArray.addAll(adArray)
+        tempArray.addAll(newList)
+        val diffResult = DiffUtil.calculateDiff(DifUtilHelper(adArray,tempArray))
+        diffResult.dispatchUpdatesTo(this)
+        adArray.clear()
+        adArray.addAll(tempArray)
+    }
+
+    fun updateAdapterWithClear(newList:List<Ad>){
         val diffResult = DiffUtil.calculateDiff(DifUtilHelper(adArray,newList))
         diffResult.dispatchUpdatesTo(this)
         adArray.clear()
         adArray.addAll(newList)
     }
+
     interface Listener{
         fun onDeleteItem(ad:Ad)
         fun onADViewed(ad:Ad)
