@@ -44,6 +44,7 @@ class DBManager {
                      if(it.isSuccessful) listener.onFinish(true)
                  }
             }
+
         }
     }
 
@@ -139,6 +140,15 @@ class DBManager {
     fun deleteAd(ad:Ad, listener:FinishWorkListener){
         if(ad.key == null || ad.uid == null) return
         db.child(ad.key).child(ad.uid).removeValue().addOnCompleteListener {
+            if(it.isSuccessful) listener.onFinish(true)
+        }
+        db.child(ad.key).child(FILTER_NODE).removeValue().addOnCompleteListener {
+            if(it.isSuccessful) listener.onFinish(true)
+        }
+        db.child(ad.key).child(INFO_NODE).removeValue().addOnCompleteListener {
+            if(it.isSuccessful) listener.onFinish(true)
+        }
+        db.child(ad.key).child(FAVS_NODE).removeValue().addOnCompleteListener {
             if(it.isSuccessful) listener.onFinish(true)
         }
     }

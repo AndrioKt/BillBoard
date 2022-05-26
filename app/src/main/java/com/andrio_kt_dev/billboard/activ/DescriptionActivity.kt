@@ -2,7 +2,6 @@ package com.andrio_kt_dev.billboard.activ
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -13,9 +12,6 @@ import com.andrio_kt_dev.billboard.adapters.ImageAdapter
 import com.andrio_kt_dev.billboard.databinding.ActivityDescriptionBinding
 import com.andrio_kt_dev.billboard.model.Ad
 import com.andrio_kt_dev.billboard.utils.ImageManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class DescriptionActivity : AppCompatActivity() {
     lateinit var binding : ActivityDescriptionBinding

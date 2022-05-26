@@ -2,12 +2,9 @@ package com.andrio_kt_dev.billboard.frag
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.andrio_kt_dev.billboard.R
-import com.andrio_kt_dev.billboard.databinding.ListImageFragBinding
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback

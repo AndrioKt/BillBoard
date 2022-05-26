@@ -153,6 +153,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 R.id.id_favs -> {
                     firebaseViewModel.loadMyFavs()
+                    mainContent.toolbar.title = getString(R.string.favorites)
                 }
                 R.id.id_home -> {
                     currentCat = getString(R.string.general)
@@ -180,15 +181,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.id_cars ->{
                 getAdsFromCat(getString(R.string.ad_car))
+                binding.mainContent.toolbar.title = getString(R.string.ad_car)
             }
             R.id.id_pc ->{
                 getAdsFromCat(getString(R.string.ad_pc))
+                binding.mainContent.toolbar.title = getString(R.string.ad_pc)
             }
             R.id.id_smart ->{
                 getAdsFromCat(getString(R.string.ad_smartphones))
+                binding.mainContent.toolbar.title = getString(R.string.ad_smartphones)
             }
             R.id.id_home_appl ->{
                 getAdsFromCat(getString(R.string.ad_home_appliances))
+                binding.mainContent.toolbar.title = getString(R.string.ad_home_appliances)
             }
             R.id.id_sign_in ->{
                 dialogHelper.createSignDialog(DialogConst.SIGN_IN_STATE)
@@ -226,7 +231,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else if(user.isAnonymous){
             tvAccount.setText(R.string.guest)
             imAccount.setImageResource(R.drawable.ic_default_avatar)
-        } else if (user.isAnonymous == false) {
+        } else if (!user.isAnonymous) {
             tvAccount.text = user.email
             Picasso.get().load(user.photoUrl).into(imAccount)
         }

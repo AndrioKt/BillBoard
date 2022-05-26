@@ -34,7 +34,7 @@ class ImageListFrag (private val onFragCloseInterface: FragmentCloseInterface): 
     private var addItem: MenuItem? = null
     lateinit var binding: ListImageFragBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = ListImageFragBinding.inflate(layoutInflater, container,false)
         adView = binding.adView
         return binding.root

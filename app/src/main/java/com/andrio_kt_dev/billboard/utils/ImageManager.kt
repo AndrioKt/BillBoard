@@ -5,8 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.widget.ImageView
-import androidx.core.net.toUri
-import androidx.exifinterface.media.ExifInterface
 import com.andrio_kt_dev.billboard.adapters.ImageAdapter
 import com.andrio_kt_dev.billboard.model.Ad
 import com.squareup.picasso.Picasso
@@ -14,11 +12,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.InputStream
 
 object ImageManager {
-    const val MAX_IMAGE_SIZE = 1000
+    private const val MAX_IMAGE_SIZE = 1000
     const val WIDTH = 0
     const val HEIGHT = 1
     fun getImageSize(uri:Uri, act: Activity): List<Int>{

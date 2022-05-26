@@ -6,9 +6,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import com.andrio_kt_dev.billboard.MainActivity
 import com.andrio_kt_dev.billboard.R
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.*
 import java.lang.Exception
 
@@ -19,11 +17,11 @@ class AccountHelper(private val act:MainActivity) {
             act.myAuth.currentUser?.delete()?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     act.myAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                signUpWithEmailSuccessful(task.result.user!!)
+                        .addOnCompleteListener { task1 ->
+                            if (task1.isSuccessful) {
+                                signUpWithEmailSuccessful(task1.result.user!!)
                             } else {
-                                signUpWithEmailException(task.exception!!, email, password)
+                                signUpWithEmailException(task1.exception!!, email, password)
                             }
                         }
                 }
@@ -123,7 +121,7 @@ class AccountHelper(private val act:MainActivity) {
                     Toast.makeText(act, "Sign in done",Toast.LENGTH_LONG).show()
                     act.uiUpdate(task2.result?.user)
                 } else {
-                    Log.d("MyLog","Google signIn Error: ${task.exception}")
+                    Toast.makeText(act, "Google signIn Error: ${task.exception}",Toast.LENGTH_LONG).show()
                 }
                 }
             }

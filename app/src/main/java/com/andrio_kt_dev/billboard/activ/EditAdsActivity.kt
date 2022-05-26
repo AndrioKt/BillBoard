@@ -1,7 +1,6 @@
 package com.andrio_kt_dev.billboard.activ
 
 import android.graphics.Bitmap
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -21,7 +20,6 @@ import com.andrio_kt_dev.billboard.utils.CityHelper
 import com.andrio_kt_dev.billboard.utils.ImageManager
 import com.andrio_kt_dev.billboard.utils.ImagePick
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import java.io.ByteArrayOutputStream
 
 
@@ -233,7 +231,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         val imStorageRef = dbManager.dbStorage.child(dbManager.auth.uid!!).child("image_${System.currentTimeMillis()}")
         val uploadTask = imStorageRef.putBytes(byteArray)
         uploadTask.continueWithTask{
-            task-> imStorageRef.downloadUrl
+            imStorageRef.downloadUrl
         }.addOnCompleteListener(listener)
     }
 
@@ -245,7 +243,7 @@ class EditAdsActivity : AppCompatActivity(), FragmentCloseInterface {
         val imStorageRef = dbManager.dbStorage.storage.getReferenceFromUrl(url)
         val uploadTask = imStorageRef.putBytes(byteArray)
         uploadTask.continueWithTask{
-                task-> imStorageRef.downloadUrl
+                imStorageRef.downloadUrl
         }.addOnCompleteListener(listener)
     }
 

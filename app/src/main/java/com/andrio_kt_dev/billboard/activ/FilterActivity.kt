@@ -3,9 +3,7 @@ package com.andrio_kt_dev.billboard.activ
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import com.andrio_kt_dev.billboard.R
 import com.andrio_kt_dev.billboard.databinding.ActivityFilterBinding

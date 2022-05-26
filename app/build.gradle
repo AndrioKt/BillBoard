@@ -6,6 +6,15 @@ plugins {
 android {
     compileSdk 32
 
+    signingConfigs{
+        release{
+            storeFile file ('C:\\Android\\BillBoard\\GooglePlayKey\\key1.jks')
+            storePassword 'andrio'
+            keyAlias 'BillBoardKey'
+            keyPassword 'andrio'
+        }
+    }
+
     defaultConfig {
         applicationId "com.andrio_kt_dev.billboard"
         minSdk 26
@@ -22,6 +31,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -33,6 +46,11 @@ android {
     }
     buildFeatures{
         viewBinding true
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 }
 

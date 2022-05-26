@@ -1,7 +1,6 @@
 package com.andrio_kt_dev.billboard.adapters
 
 import android.content.Intent
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.andrio_kt_dev.billboard.MainActivity
 import com.andrio_kt_dev.billboard.R
-import com.andrio_kt_dev.billboard.activ.DescriptionActivity
 import com.andrio_kt_dev.billboard.activ.EditAdsActivity
 import com.andrio_kt_dev.billboard.model.Ad
 import com.andrio_kt_dev.billboard.databinding.AdListItemBinding
-import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
