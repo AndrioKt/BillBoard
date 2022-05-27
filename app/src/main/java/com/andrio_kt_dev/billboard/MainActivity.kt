@@ -77,8 +77,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         filterLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if(it.resultCode == RESULT_OK){
                 filter = it.data?.getStringExtra(FilterActivity.FILTER_KEY)!!
-                Log.d("MyLog", "F $filter")
-               Log.d("MyLog", "getF ${FilterManager.getFilter(filter)}")
                 filterDb = FilterManager.getFilter(filter)
             } else if (it.resultCode == RESULT_CANCELED){
                 filterDb = ""
@@ -179,20 +177,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 firebaseViewModel.loadMyAds()
                 binding.mainContent.toolbar.title = getString(R.string.ad_my_ads)
             }
+            R.id.id_favorite ->{
+                firebaseViewModel.loadMyFavs()
+                binding.mainContent.toolbar.title = getString(R.string.favorites)
+            }
             R.id.id_cars ->{
-                getAdsFromCat(getString(R.string.ad_car))
+                getAdsFromCat(CAT_CAR)
                 binding.mainContent.toolbar.title = getString(R.string.ad_car)
             }
             R.id.id_pc ->{
-                getAdsFromCat(getString(R.string.ad_pc))
+                getAdsFromCat(CAT_PC)
                 binding.mainContent.toolbar.title = getString(R.string.ad_pc)
             }
             R.id.id_smart ->{
-                getAdsFromCat(getString(R.string.ad_smartphones))
+                getAdsFromCat(CAT_SMART)
                 binding.mainContent.toolbar.title = getString(R.string.ad_smartphones)
             }
             R.id.id_home_appl ->{
-                getAdsFromCat(getString(R.string.ad_home_appliances))
+                getAdsFromCat(CAT_APL)
                 binding.mainContent.toolbar.title = getString(R.string.ad_home_appliances)
             }
             R.id.id_sign_in ->{
@@ -313,5 +315,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         const val EDIT_STATE = "edit_state"
         const val ADS_DATA = "ads_data"
         const val SCROLL_DOWN = 1
+
+        const val CAT_CAR = "Автомобили"
+        const val CAT_PC = "Компьютеры"
+        const val CAT_SMART = "Смартфоны"
+        const val CAT_APL = "Бытовая техника"
+
+        const val CAT_MY_ADS = "Мои объявления"
+        const val CAT_FAV = "Избранные"
+       // const val CAT_APL = "Бытовая техника"
     }
 }

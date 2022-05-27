@@ -73,7 +73,7 @@ class DescriptionActivity : AppCompatActivity() {
         iSendEmail.apply {
             putExtra(Intent.EXTRA_EMAIL, arrayOf(ad?.email))
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.send_email_subject))
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.send_email_text))
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.send_email_text)+ " \"" + ad!!.title + "\"")
         }
         try{
             startActivity(Intent.createChooser(iSendEmail, "Open with "))

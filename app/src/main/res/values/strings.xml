@@ -1,89 +1,89 @@
 <resources>
-    <string name="app_name">BillBoard</string>
+    <string name="app_name" translatable="false">AdBase</string>
     <string name="ad_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="inter_id">ca-app-pub-3940256099942544/1033173712</string>
 
     <!-- Driver menu -->
-    <string name="ad_cat1">Объявление</string>
-    <string name="ad_my_ads">Мои объявления</string>
-    <string name="favorites">Избранные</string>
-    <string name="ad_car">Автомобили</string>
-    <string name="ad_pc">Компьютеры</string>
-    <string name="ad_smartphones">Смартфоны</string>
-    <string name="ad_home_appliances">Бытовая техника</string>
-    <string name="not_reg">Войдите или зарегестрируйтесь!</string>
+    <string name="ad_cat1">Ad</string>
+    <string name="ad_my_ads">My ads</string>
+    <string name="favorites">Favorites</string>
+    <string name="ad_car">Cars</string>
+    <string name="ad_pc">Computers</string>
+    <string name="ad_smartphones">Smartphones</string>
+    <string name="ad_home_appliances">Appliances</string>
+    <string name="not_reg">Sign in or register!</string>
 
-    <string name="ad_cat2">Аккаунт</string>
-    <string name="ad_sign_up">Регистрация</string>
-    <string name="ad_sign_in">Вход</string>
-    <string name="ad_sign_out">Выход</string>
+    <string name="ad_cat2">Account</string>
+    <string name="ad_sign_up">Sign Up</string>
+    <string name="ad_sign_in">Sign In</string>
+    <string name="ad_sign_out">Sign Out</string>
     <string name="open_menu">Open</string>
     <string name="close_menu">Close</string>
     <!-- Sign dialog -->
     <string name="Email_hint">Email</string>
     <string name="password_hint">Password:</string>
-    <string name="forget_password_button">Забыли пароль?</string>
-    <string name="sign_in_action">Войти</string>
-    <string name="sign_up_action">Зарегистрироваться</string>
-    <string name="sign_up_error">Не удалось зарегистрироваться</string>
-    <string name="sign_in_error">Не удалось войти</string>
-    <string name="send_verif_email_error">Не удалось отправить email для подтверждения!</string>
-    <string name="send_verif_email">На вашу почту была отправлена ссылка для подтверждения вашего аккаунта, пожалуйста подтвердите ваш аккаунт.</string>
-    <string name="send_reset_pass">На вашу почту была отправлена ссылка для восстановления пароля.</string>
-    <string name="send_reset_pass_error">Ошибка восстановления пароля.</string>
-    <string name="reset_pass_hint">Для восстановления пароля укажите ваш Email адрес</string>
-    <string name="no_result">Нет результата</string>
+    <string name="forget_password_button">Forgot your password?</string>
+    <string name="sign_in_action">Sign In</string>
+    <string name="sign_up_action">Sign Up</string>
+    <string name="sign_up_error">"Sign Up failed "</string>
+    <string name="sign_in_error">Sign In failed</string>
+    <string name="send_verif_email_error">Sending a confirmation email failed</string>
+    <string name="send_verif_email">A link has been sent to your email to confirm your account, please confirm your account.</string>
+    <string name="send_reset_pass">A password recovery link has been sent to your email.</string>
+    <string name="send_reset_pass_error">Password recovery error.</string>
+    <string name="reset_pass_hint">To recover your password, enter your Email</string>
+    <string name="no_result">No result</string>
     <string name="load">Loading...</string>
 
     <!-- Account strings/errors -->
-    <string name="link_done">Успешное объединения Email с Google Account</string>
-    <string name="enter_to_google">У вас уже есть аккаунт с этим Email адресом</string>
-    <string name="error_empty">Заполните пустые поля</string>
+    <string name="link_done">Successfully combining Email with Google Account</string>
+    <string name="enter_to_google">You already have an account with this Email</string>
+    <string name="error_empty">Fill in the empty fields</string>
 
     <!-- Edit Activity -->
-    <string name="select_country">*Выберете страну</string>
-    <string name="country">Страна</string>
-    <string name="select_city">*Выберете город</string>
-    <string name="city">Город</string>
-    <string name="country_not_selected">Не выбрана страна</string>
-    <string name="phone_number">Телефон</string>
-    <string name="phone_number_edit">*Номер телефона</string>
-    <string name="index">Индекс</string>
-    <string name="index_hint">*Индекс</string>
-    <string name="category">Категория</string>
-    <string name="select_category">*Выберите категорию</string>
-    <string name="price">Цена</string>
-    <string name="price_hint">*Укажите цену</string>
-    <string name="description">Описание</string>
-    <string name="description_hint">Несколько слов о товаре</string>
-    <string name="with_send">C отправкой</string>
-    <string name="send">Отправка</string>
-    <string name="Publish">Опубликовать</string>
-    <string name="ad_name">*Укажите название объявления</string>
-    <string name="ad_name_title">Название</string>
-    <string name="fields_fill">Заполните все обязательные(*) поля!</string>
+    <string name="select_country">*Select a country</string>
+    <string name="country">Country</string>
+    <string name="select_city">*Select a city</string>
+    <string name="city">City</string>
+    <string name="country_not_selected">No country selected</string>
+    <string name="phone_number">Phone number</string>
+    <string name="phone_number_edit">*Phone number</string>
+    <string name="index">Index</string>
+    <string name="index_hint">*Index</string>
+    <string name="category">Category</string>
+    <string name="select_category">*Select a category</string>
+    <string name="price">Price</string>
+    <string name="price_hint">*Specify the price</string>
+    <string name="description">Description</string>
+    <string name="description_hint">A few words about the product</string>
+    <string name="with_send">Shipment included</string>
+    <string name="send">Shipment</string>
+    <string name="Publish">Publish</string>
+    <string name="ad_name">*Specify the name of the ad</string>
+    <string name="ad_name_title">Name</string>
+    <string name="fields_fill">Fill in all required(*) fields!</string>
 
     <!-- Main Activity -->
-    <string name="price_main_title">Цена:</string>
-    <string name="general">Все категории</string>
-    <string name="empty">В данной категории объявления отсутствуют</string>
-    <string name="guest">Гость</string>
-    <string name="publish_time">Время публикации: </string>
+    <string name="price_main_title">Price:</string>
+    <string name="general">All categories</string>
+    <string name="empty">There are no ads in this category</string>
+    <string name="guest">Guest</string>
+    <string name="publish_time">Publication time:</string>
 
     <!-- Desc Activity -->
-    <string name="phone_title">Телефон:</string>
-    <string name="country_title">Страна:</string>
-    <string name="city_title">Город:</string>
-    <string name="Index_title">Индекс:</string>
-    <string name="Send_title">Отправка:</string>
-    <string name="Send_yes">Да</string>
-    <string name="Send_no">Нет</string>
+    <string name="phone_title">Phone number:</string>
+    <string name="country_title">Country:</string>
+    <string name="city_title">City:</string>
+    <string name="Index_title">Index:</string>
+    <string name="Send_title">Shipment:</string>
+    <string name="Send_yes">Yes</string>
+    <string name="Send_no">No</string>
     <string name="email">Email:</string>
-    <string name="send_email_subject">Объявление</string>
-    <string name="send_email_text">Здравствуйте. Меня заинтересовало Ваше объявление!</string>
+    <string name="send_email_subject">Ad</string>
+    <string name="send_email_text">Hello. I am interested in your ad!</string>
 
     <!-- Filter Activity -->
-    <string name="bt_done_filter">Применить фильтр</string>
-    <string name="bt_clear_filter">Очистить фильтр</string>
+    <string name="bt_done_filter">Apply filter</string>
+    <string name="bt_clear_filter">Clear filter</string>
 
 </resources>

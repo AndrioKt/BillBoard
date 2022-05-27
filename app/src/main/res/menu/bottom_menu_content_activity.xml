@@ -13,11 +13,10 @@
         android:orderInCategory="300"
         />
     <item
-        android:title="Favorites"
-        android:icon="@drawable/ic_favor"
         android:id="@+id/id_favs"
+        android:icon="@drawable/ic_fav_presed"
         android:orderInCategory="200"
-        />
+        android:title="Favorites" />
     <item
         android:title="Home"
         android:icon="@drawable/ic_home"

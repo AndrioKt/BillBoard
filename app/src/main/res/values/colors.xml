@@ -9,10 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="Menu_color">#0C2973</color>
     <color name="alert_colot">#F84235</color>
-    <color name="grey_light">#ECE1E1</color>
+    <color name="grey_light">#E1E1E1</color>
     <color name="BlueWhite_light">#BECCFB</color>
     <color name="Text_color">#9C043EB4</color>
     <color name="Ad_color">#A9FAF09C</color>
     <color name="Ad_color_back">#A9AEA562</color>
     <color name="loadBack">#8A131313</color>
+    <color name="white_blue">#9FE1F1F8</color>
 </resources>
