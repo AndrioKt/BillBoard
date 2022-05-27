@@ -1,0 +1,88 @@
+<resources>
+    <string name="ad_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="inter_id">ca-app-pub-3940256099942544/1033173712</string>
+
+    <!-- Driver menu -->
+    <string name="ad_cat1">Объявление</string>
+    <string name="ad_my_ads">Мои объявления</string>
+    <string name="favorites">Избранные</string>
+    <string name="ad_car">Автомобили</string>
+    <string name="ad_pc">Компьютеры</string>
+    <string name="ad_smartphones">Смартфоны</string>
+    <string name="ad_home_appliances">Бытовая техника</string>
+    <string name="not_reg">Войдите или зарегестрируйтесь!</string>
+
+    <string name="ad_cat2">Аккаунт</string>
+    <string name="ad_sign_up">Регистрация</string>
+    <string name="ad_sign_in">Вход</string>
+    <string name="ad_sign_out">Выход</string>
+    <string name="open_menu">Open</string>
+    <string name="close_menu">Close</string>
+    <!-- Sign dialog -->
+    <string name="Email_hint">Email</string>
+    <string name="password_hint">Password:</string>
+    <string name="forget_password_button">Забыли пароль?</string>
+    <string name="sign_in_action">Войти</string>
+    <string name="sign_up_action">Зарегистрироваться</string>
+    <string name="sign_up_error">Не удалось зарегистрироваться</string>
+    <string name="sign_in_error">Не удалось войти</string>
+    <string name="send_verif_email_error">Не удалось отправить email для подтверждения!</string>
+    <string name="send_verif_email">На вашу почту была отправлена ссылка для подтверждения вашего аккаунта, пожалуйста подтвердите ваш аккаунт.</string>
+    <string name="send_reset_pass">На вашу почту была отправлена ссылка для восстановления пароля.</string>
+    <string name="send_reset_pass_error">Ошибка восстановления пароля.</string>
+    <string name="reset_pass_hint">Для восстановления пароля укажите ваш Email адрес</string>
+    <string name="no_result">Нет результата</string>
+    <string name="load">Загрузка...</string>
+
+    <!-- Account strings/errors -->
+    <string name="link_done">Успешное объединения Email с Google Account</string>
+    <string name="enter_to_google">У вас уже есть аккаунт с этим Email адресом</string>
+    <string name="error_empty">Заполните пустые поля</string>
+
+    <!-- Edit Activity -->
+    <string name="select_country">*Выберете страну</string>
+    <string name="country">Страна</string>
+    <string name="select_city">*Выберете город</string>
+    <string name="city">Город</string>
+    <string name="country_not_selected">Не выбрана страна</string>
+    <string name="phone_number">Телефон</string>
+    <string name="phone_number_edit">*Номер телефона</string>
+    <string name="index">Индекс</string>
+    <string name="index_hint">*Индекс</string>
+    <string name="category">Категория</string>
+    <string name="select_category">*Выберите категорию</string>
+    <string name="price">Цена</string>
+    <string name="price_hint">*Укажите цену</string>
+    <string name="description">Описание</string>
+    <string name="description_hint">Несколько слов о товаре</string>
+    <string name="with_send">C отправкой</string>
+    <string name="send">Отправка</string>
+    <string name="Publish">Опубликовать</string>
+    <string name="ad_name">*Укажите название объявления</string>
+    <string name="ad_name_title">Название</string>
+    <string name="fields_fill">Заполните все обязательные(*) поля!</string>
+
+    <!-- Main Activity -->
+    <string name="price_main_title">Цена:</string>
+    <string name="general">Все категории</string>
+    <string name="empty">В данной категории объявления отсутствуют</string>
+    <string name="guest">Гость</string>
+    <string name="publish_time">Время публикации: </string>
+
+    <!-- Desc Activity -->
+    <string name="phone_title">Телефон:</string>
+    <string name="country_title">Страна:</string>
+    <string name="city_title">Город:</string>
+    <string name="Index_title">Индекс:</string>
+    <string name="Send_title">Отправка:</string>
+    <string name="Send_yes">Да</string>
+    <string name="Send_no">Нет</string>
+    <string name="email">Email:</string>
+    <string name="send_email_subject">Объявление</string>
+    <string name="send_email_text">Здравствуйте. Меня заинтересовало Ваше объявление!</string>
+
+    <!-- Filter Activity -->
+    <string name="bt_done_filter">Применить фильтр</string>
+    <string name="bt_clear_filter">Очистить фильтр</string>
+
+</resources>
